@@ -57,10 +57,8 @@ class HomeActivity : AppCompatActivity() {
                     student?.let { students.add(it) }
                 }
 
-                // Sort by date of registration
                 students.sortBy { it.dateOfRegistration }
 
-                // Assume first student is logged-in user to match department
                 val userId = getSharedPreferences("UserPrefs", MODE_PRIVATE).getString("user_id", "")
                 val currentStudent = students.find { it.studentId == userId }
                 currentUserDept = currentStudent?.department

@@ -3,6 +3,7 @@ package com.example.studentregistrationfirebase
 import com.google.firebase.auth.FirebaseAuth
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -42,7 +43,6 @@ class LoginActivity : AppCompatActivity() {
         loginBtn.setOnClickListener {
             val email = emailField.text.toString()
             val password = passwordField.text.toString()
-
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
@@ -52,19 +52,11 @@ class LoginActivity : AppCompatActivity() {
                         finish()
                     } else {
                         val exception = it.exception
+                        exception?.message?.let { it1 -> Log.d("Exception", it1) }
+
                         if (exception is FirebaseAuthException) {
-                            when (exception.errorCode) {
-                                "ERROR_WRONG_PASSWORD" -> {
-                                    Toast.makeText(this, "Incorrect password", Toast.LENGTH_SHORT).show()
-                                }
-                                "ERROR_USER_NOT_FOUND" -> {
-                                    Toast.makeText(this, "User not found. Redirecting to signup.", Toast.LENGTH_SHORT).show()
-                                    startActivity(Intent(this, SignupActivity::class.java))
-                                }
-                                else -> {
-                                    Toast.makeText(this, "Authentication failed: ${exception.message}", Toast.LENGTH_SHORT).show()
-                                }
-                            }
+                            Toast.makeText(this, "User can be authenticated. Redirecting to signup.", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this, SignupActivity::class.java))
                         } else {
                             Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
                         }
